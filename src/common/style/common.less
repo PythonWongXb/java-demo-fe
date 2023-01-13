@@ -1,0 +1,56 @@
+.text-ellipsis {
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.el-loading-spinner .path {
+    stroke: #999 !important;
+}
+.el-checkbox__label {
+    color: var(--black-text)!important;
+}
+.link {
+    font-size: 14px;
+    color: #4e6ef2;
+    cursor: pointer;
+}
+
+.dim { // 关键信息设置模糊效果
+    transform: translateY(2px);
+    filter: blur(4px);
+    display: inline-block;
+}
+// 多行文本溢出点点点
+.overdotline(@lines) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 1.5em;
+    max-height: @lines * 1.5em;
+    -webkit-line-clamp: @lines;
+    -webkit-box-orient: vertical;  
+}
+em {
+    color: #EF1F1FFF;
+}
+html,body {
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-size: 14px;
+}
+
+.like-link {
+    color: var(--el-color-primary);
+    cursor: pointer;
+}
+
+// PingFangSC-Medium加粗黑色字体 多次使用
+.font-m {
+    font-family: PingFangSC-Medium;
+}
+
+// PingFangSC-Medium加粗黑色字体 多次使用
+.font-n {
+    font-family: PingFangSC-Regular, PingFang SC;
+}

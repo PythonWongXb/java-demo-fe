@@ -18,7 +18,9 @@ export default {
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
+import { useUserStore } from 'stores/modules/user';
 
+const store = useUserStore();
 const phone = ref("15942043948");
 const pwd = ref("1234");
 const router = useRouter();
@@ -33,6 +35,10 @@ const login = async () => {
         ElMessage({
             type: 'success',
             message: res.data.message as string
+        });
+        store.updateUserInfo({
+            username: (res.data.data as any).username,
+            isAuth: true,
         });
         router.push('/list');
     } catch (error) {

@@ -1,4 +1,5 @@
 export const useUserStore = defineStore('user', {
+    persist: true,
     state: () => ({
         isAuth: false,
         isNewUser: false, // 是否新创建的用户
@@ -8,9 +9,19 @@ export const useUserStore = defineStore('user', {
     actions: {
         // 更新登录状态
         updateIsAuth(state: boolean) {
-            const { wsCache } = useCache();
             this.isAuth = state;
-            wsCache.set('isAuth', state, { force: true });
+        },
+
+        updateUserInfo(payLoad: any) {
+            this.isAuth = payLoad.isAuth;
+            this.avatarUrl = payLoad.avatarUrl;
+            this.nickName = payLoad.username;
+        },
+
+        clearUserInfo() {
+            this.isAuth = false;
+            this.avatarUrl = '';
+            this.nickName = '';
         }
     }
 });

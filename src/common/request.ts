@@ -1,5 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders } from 'axios';
-
+import router from '@/router';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { ElMessage } from 'element-plus';
 export type TResData = GeneralResData | LoginResData;
 
 // T是请求参数data的类型, R是后端接口数据类型，U是自定义方法response函数的返回值
@@ -12,15 +13,9 @@ interface TRequestOptions<T extends object, R extends TResData, U> extends Axios
     ): U;
 }
 
-// type THeaderItem = 'User-Info' | 'Env' | 'Content-Type'
-//     | 'X-Requested-With' | 'Api-Version' | 'Client-Version' | 'Auth-Type';
-// type THeader = Record<THeaderItem, string> & Record<string, string>;
-
 const instance: AxiosInstance = axios.create();
 
 const timeout: number = 30 * 1000;
-
-const { wsCache } = useCache();
 
 interface Request {
     <R extends TResData>(url: string): Promise<R>;
@@ -34,25 +29,6 @@ const responseIsLogin = (res: TResData): res is LoginResData => {
     return typeof data.retcode === 'number';
 };
 
-// const initHeaders = (customHeader: AxiosRequestHeaders): THeader => {
-//     const loginUserInfoList = ['acctToken', 'acctId', 'loginId', 'deviceType'];
-//     const [accToken, accId, loginId, deviceType] = loginUserInfoList.map(item => {
-//         let info = wsCache.get(item);
-//         info = info ? info.replace(/"/g, '') : '';
-//         return info;
-//     });
-//     return {
-//         'User-Info': `uc_id=;uc_appid=585;acc_token=${accToken};acc_id=${accId};login_id=${loginId};`
-//             + `device_type=${deviceType};paas_appid=16;version=12;login_type=passport`,
-//         'Env': 'WEB',
-//         'Content-Type': 'application/json;charset=UTF-8',
-//         'X-Requested-With': 'XMLHttpRequest',
-//         'Api-Version': '0',
-//         'Client-Version': '0',
-//         'Auth-Type': 'PAAS',
-//         ...customHeader,
-//     };
-// };
 // T是请求参数data的类型, R是返回值类型
 const request: Request = <T extends object = object, R extends TResData = TResData, U = unknown>
     (url: string | TRequestOptions<T, R, U>, data?: T, options?: TRequestOptions<T, R, U>): Promise<R> => {
@@ -82,7 +58,7 @@ const request: Request = <T extends object = object, R extends TResData = TResDa
         };
     }
     return new Promise<R>((resolve, reject) => {
-        instance.request(config).then((res: AxiosResponse<R>) => {
+        instance.request(config).then(async (res: AxiosResponse<R>) => {
             if (typeof config.response === 'function') {
                 config.response(res, resolve, reject);
                 return;
@@ -92,12 +68,22 @@ const request: Request = <T extends object = object, R extends TResData = TResDa
             }
             if (!responseIsLogin(res.data)) {
                 const { code } = res.data;
-                const isAuth = wsCache.get('isAuth');
+                // const isAuth = wsCache.get('isAuth');
                 const whiteCodes = [401, 402];
                 // 如果是免鉴权，正常放行
-                if (whiteCodes.includes(+code) && isAuth === 'false') {
-                    res.data.code = 0;
-                    return resolve(res.data);
+                if (whiteCodes.includes(+code)) {
+                    ElMessage({
+                        type: 'error',
+                        message: '登陆过期，请重新登陆！',
+                        duration: 1000,
+                    });
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                    router.push('/login');
+                    const { useUserStore } = await import('@/stores/modules/user');
+
+                    const store = useUserStore();
+                    store.clearUserInfo();
+                    return reject(res.data);
                 }
                 if (+res.data.code === 0) {
                     resolve(res.data);

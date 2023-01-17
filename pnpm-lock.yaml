@@ -23,6 +23,7 @@ specifiers:
   mitt: ^3.0.0
   only-allow: ^1.1.1
   pinia: ^2.0.28
+  pinia-plugin-persistedstate: ^3.0.2
   plop: ^3.1.1
   rollup-plugin-visualizer: ^5.8.3
   terser: ^5.16.1
@@ -51,6 +52,7 @@ dependencies:
   element-plus: 2.2.26_vue@3.2.45
   mitt: 3.0.0
   pinia: 2.0.28_prq2uz4lho2pwp6irk4cfkrxwu
+  pinia-plugin-persistedstate: 3.0.2_pinia@2.0.28
   vue: 3.2.45
   vue-dompurify-html: 3.1.2_vue@3.2.45
   vue-router: 4.1.6_vue@3.2.45
@@ -3933,6 +3935,14 @@ packages:
     engines: {node: '>=6'}
     dev: true
     optional: true
+
+  /pinia-plugin-persistedstate/3.0.2_pinia@2.0.28:
+    resolution: {integrity: sha512-84vPyUhPA/8Pr+1mT1ioNb2d8z4tvdgYRqMQf8xyauOVBKjo0ZcRBwPQBV7ZAJG43Kwar43nXG2jU+ZMvAFFRQ==}
+    peerDependencies:
+      pinia: ^2.0.0
+    dependencies:
+      pinia: 2.0.28_prq2uz4lho2pwp6irk4cfkrxwu
+    dev: false
 
   /pinia/2.0.28_prq2uz4lho2pwp6irk4cfkrxwu:
     resolution: {integrity: sha512-YClq9DkqCblq9rlyUual7ezMu/iICWdBtfJrDt4oWU9Zxpijyz7xB2xTwx57DaBQ96UGvvTMORzALr+iO5PVMw==}

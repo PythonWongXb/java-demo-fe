@@ -18,7 +18,7 @@
                     >
                     <img
                         v-show="menuCollapseState"
-                        src="https://sponsors.vuejs.org/images/vueschool.png" alt="logo"
+                        src="https://pinia.web3doc.top/logo.svg" alt="logo"
                         class="h-24px w-30px mt-15px"
                     >
                 </header>

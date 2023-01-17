@@ -10,3 +10,6 @@ interface IQueryDetailInfoByIdRes extends GeneralResData {
 
 export const findSkinDetail = (data: RequestData) => request<RequestData,
     IQueryDetailInfoByIdRes>('/skin-detail/findSkinDetail', data);
+
+export const logout123 = (data: RequestData) => request<RequestData,
+    IQueryDetailInfoByIdRes>('/user/logout', data);

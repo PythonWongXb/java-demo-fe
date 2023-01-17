@@ -27,10 +27,10 @@ import router from '@/router';
 import { useUserStore } from 'stores/modules/user';
 const store = useUserStore();
 
-const logout = () => {
-    API.logout123({});
-    store.clearUserInfo();
+const logout = async () => {
+    await API.logout({});
     router.push('/login');
+    store.clearUserInfo();
 };
 
 const handlerCommand = (directive: string) => {

@@ -5,9 +5,10 @@ export const routeMap: RouteRecordRaw[] = [
         path: '/login',
         component: () => import('views/login.vue'),
         meta: {
-            owner: 'qiankeSearch',
+            owner: '',
             title: 'login',
-            enName: 'advancedSearch2'
+            hideMenu: true,
+            enName: 'advancedSearch'
         },
     },
     {

@@ -3,7 +3,7 @@ interface RequestData {
 
 };
 
-interface IQueryDetailInfoByIdRes extends GeneralResData, GeneralResData {
+interface IQueryDetailInfoByIdRes extends GeneralResData {
     result: boolean;
     message: string;
 };

@@ -1,6 +1,8 @@
 <template>
     <el-container class="h-screen">
-        <el-aside :width="`${menuCollapseState ? 70 : 244}px`" class="box-shadow-2-0-6-0-rgba(0,0,0,0.1) bg-lightGray">
+        <el-aside
+            :width="`${menuCollapseState ? 70 : 244}px`" class="box-shadow-2-0-6-0-rgba(0,0,0,0.1) bg-lightGray"
+        >
             <el-menu
                 mode="vertical"
                 :collapse-transition="false"

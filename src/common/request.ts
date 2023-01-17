@@ -12,9 +12,9 @@ interface TRequestOptions<T extends object, R extends TResData, U> extends Axios
     ): U;
 }
 
-type THeaderItem = 'User-Info' | 'Env' | 'Content-Type'
-    | 'X-Requested-With' | 'Api-Version' | 'Client-Version' | 'Auth-Type';
-type THeader = Record<THeaderItem, string> & Record<string, string>;
+// type THeaderItem = 'User-Info' | 'Env' | 'Content-Type'
+//     | 'X-Requested-With' | 'Api-Version' | 'Client-Version' | 'Auth-Type';
+// type THeader = Record<THeaderItem, string> & Record<string, string>;
 
 const instance: AxiosInstance = axios.create();
 
@@ -34,25 +34,25 @@ const responseIsLogin = (res: TResData): res is LoginResData => {
     return typeof data.retcode === 'number';
 };
 
-const initHeaders = (customHeader: AxiosRequestHeaders): THeader => {
-    const loginUserInfoList = ['acctToken', 'acctId', 'loginId', 'deviceType'];
-    const [accToken, accId, loginId, deviceType] = loginUserInfoList.map(item => {
-        let info = wsCache.get(item);
-        info = info ? info.replace(/"/g, '') : '';
-        return info;
-    });
-    return {
-        'User-Info': `uc_id=;uc_appid=585;acc_token=${accToken};acc_id=${accId};login_id=${loginId};`
-            + `device_type=${deviceType};paas_appid=16;version=12;login_type=passport`,
-        'Env': 'WEB',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Api-Version': '0',
-        'Client-Version': '0',
-        'Auth-Type': 'PAAS',
-        ...customHeader,
-    };
-};
+// const initHeaders = (customHeader: AxiosRequestHeaders): THeader => {
+//     const loginUserInfoList = ['acctToken', 'acctId', 'loginId', 'deviceType'];
+//     const [accToken, accId, loginId, deviceType] = loginUserInfoList.map(item => {
+//         let info = wsCache.get(item);
+//         info = info ? info.replace(/"/g, '') : '';
+//         return info;
+//     });
+//     return {
+//         'User-Info': `uc_id=;uc_appid=585;acc_token=${accToken};acc_id=${accId};login_id=${loginId};`
+//             + `device_type=${deviceType};paas_appid=16;version=12;login_type=passport`,
+//         'Env': 'WEB',
+//         'Content-Type': 'application/json;charset=UTF-8',
+//         'X-Requested-With': 'XMLHttpRequest',
+//         'Api-Version': '0',
+//         'Client-Version': '0',
+//         'Auth-Type': 'PAAS',
+//         ...customHeader,
+//     };
+// };
 // T是请求参数data的类型, R是返回值类型
 const request: Request = <T extends object = object, R extends TResData = TResData, U = unknown>
     (url: string | TRequestOptions<T, R, U>, data?: T, options?: TRequestOptions<T, R, U>): Promise<R> => {
@@ -68,7 +68,7 @@ const request: Request = <T extends object = object, R extends TResData = TResDa
             method: options?.method || 'POST',
             responseType: options?.responseType || 'json',
             params: options?.method === 'GET' ? data : {},
-            headers: initHeaders(options?.headers || {}),
+            headers: options?.headers || {},
             timeout,
             ...options,
         };
@@ -78,7 +78,7 @@ const request: Request = <T extends object = object, R extends TResData = TResDa
             timeout,
             ...url,
             // 做一个请求头的合并，这样没必要请求的时候把initHeaders返回的请求头都写一遍
-            headers: initHeaders(url.headers || {}),
+            headers: options?.headers || {},
         };
     }
     return new Promise<R>((resolve, reject) => {

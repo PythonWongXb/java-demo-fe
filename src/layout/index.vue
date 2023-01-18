@@ -112,7 +112,6 @@ const useMenuList = () => {
         });
         listItem[owner] = obj;
     }
-    console.log({ listItem });
     const initActiveMenuIndex = (newPath: string) => {
         const routeDict = Object.values(listItem);
         let activeIndexs:number[] = [];

@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 export const routeMap: RouteRecordRaw[] = [
     {
@@ -33,7 +33,7 @@ export const routeMap: RouteRecordRaw[] = [
 ];
 
 export default createRouter({
-    history: createWebHistory(import.meta.env.VITE_PUBLIC_PATH),
+    history: createWebHashHistory(),
     routes: [
         {
             path: '/',

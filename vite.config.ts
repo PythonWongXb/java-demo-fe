@@ -27,6 +27,7 @@ const currentNow = getCurrentTime();
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const env = getBuildEnv(command, mode);
+  console.log({env});
   return {
     base: env.VITE_STATIC_URL || '',
     resolve: {

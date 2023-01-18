@@ -25,9 +25,9 @@ export const getBuildEnv = (command: string, mode: string): Record<string, strin
     const root = process.cwd();
     const isBuild = command.startsWith('build');
     if (!isBuild) {
-        env = loadEnv((process.argv[3] === '--mode' ? process.argv[4] : process.argv[3]), root)
+        env = loadEnv((process.argv[3] === '--mode' ? process.argv[4] : process.argv[3]), root);
     } else {
-        env = loadEnv(mode, root)
+        env = loadEnv(mode, root);
     }
     return env;
 }

@@ -4,7 +4,12 @@ interface RequestData {
 };
 
 interface IQueryDetailInfoByIdRes extends GeneralResData {
-    data: Record<string, string | boolean>;
+    data: {
+        data: {
+            username: string;
+            avatarUrl: string;
+        };
+    };
     result: boolean;
     message: string;
 };

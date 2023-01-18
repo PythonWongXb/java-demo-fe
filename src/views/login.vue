@@ -56,11 +56,11 @@ const login = async () => {
         const res = await API.login(params);
         ElMessage({
             type: 'success',
-            message: res.data.message as string
+            message: res.message
         });
         store.updateUserInfo({
-            username: (res.data.data as any).username,
-            avatarUrl: (res.data.data as any).avatarUrl,
+            username: res.data.data.username,
+            avatarUrl: res.data.data.avatarUrl,
             isAuth: true,
         });
         router.push('/list');
@@ -91,7 +91,7 @@ const comfirm = async () => {
         const res = await API.register(formData.value);
         ElMessage({
             type: 'success',
-            message: res.data.message as string
+            message: res.message
         });
         formData.value = {
             "mobile": '',

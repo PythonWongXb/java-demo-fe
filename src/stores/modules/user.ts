@@ -1,3 +1,8 @@
+interface PayLoad {
+    isAuth: boolean;
+    avatarUrl: string;
+    username: string;
+}
 export const useUserStore = defineStore('user', {
     persist: true,
     state: () => ({
@@ -12,7 +17,7 @@ export const useUserStore = defineStore('user', {
             this.isAuth = state;
         },
 
-        updateUserInfo(payLoad: any) {
+        updateUserInfo(payLoad: PayLoad) {
             this.isAuth = payLoad.isAuth;
             this.avatarUrl = payLoad.avatarUrl;
             this.nickName = payLoad.username;

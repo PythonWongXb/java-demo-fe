@@ -3,6 +3,7 @@ interface PayLoad {
     avatarUrl: string;
     username: string;
 }
+
 export const useUserStore = defineStore('user', {
     persist: true,
     state: () => ({

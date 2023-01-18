@@ -39,6 +39,16 @@ export default createRouter({
             path: '/',
             redirect: '/login'
         },
-        ...routeMap
+        ...routeMap,
+        {
+            path: '/:pathMatch(.*)*',
+            component: () => import('../views/404.vue'),
+            meta: {
+                owner: '',
+                enName: '',
+                title: '',
+                hideMenu: true,
+            }
+        }
     ]
 });

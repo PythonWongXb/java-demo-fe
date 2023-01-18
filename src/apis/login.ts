@@ -12,5 +12,8 @@ interface IQueryDetailInfoByIdRes extends GeneralResData {
 export const login = (data: RequestData) => request<RequestData,
     IQueryDetailInfoByIdRes>('/user/login', data);
 
+export const register = (data: RequestData) => request<RequestData,
+    IQueryDetailInfoByIdRes>('/user/register', data);
+
 export const validateUser = (data: RequestData) => request<RequestData,
     IQueryDetailInfoByIdRes>('/user/get', data);

@@ -7,6 +7,28 @@
         pwd: <el-input v-model="pwd"/>
     </div>
     <el-button @click="login">login</el-button>
+    <el-button @click="register">register</el-button>
+    <el-dialog v-model="dialogFormVisible" title="Shipping address">
+        <el-form :model="formData">
+            <el-form-item label="名字" :label-width="formLabelWidth">
+                <el-input v-model="formData.username" autocomplete="off"/>
+            </el-form-item>
+            <el-form-item label="手机" :label-width="formLabelWidth">
+                <el-input v-model="formData.mobile" autocomplete="off"/>
+            </el-form-item>
+            <el-form-item label="密码" :label-width="formLabelWidth">
+                <el-input v-model="formData.pwd" autocomplete="off"/>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="comfirm">
+                    Confirm
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
 <script lang="ts">
@@ -38,6 +60,7 @@ const login = async () => {
         });
         store.updateUserInfo({
             username: (res.data.data as any).username,
+            avatarUrl: (res.data.data as any).avatarUrl,
             isAuth: true,
         });
         router.push('/list');
@@ -48,6 +71,45 @@ const login = async () => {
         });
     }
 };
+interface Demo {
+    mobile: string;
+    pwd: string;
+    username: string;
+}
+const formData = ref<Demo>({
+    "mobile": '',
+    "pwd": "",
+    "username": ""
+});
+
+const register = () => {
+    dialogFormVisible.value = true;
+};
+
+const comfirm = async () => {
+    try {
+        const res = await API.register(formData.value);
+        ElMessage({
+            type: 'success',
+            message: res.data.message as string
+        });
+        formData.value = {
+            "mobile": '',
+            "pwd": "",
+            "username": ""
+        };
+        dialogFormVisible.value = false;
+    } catch (error) {
+        ElMessage({
+            type: 'error',
+            message: (error as { message: string }).message
+        });
+    }
+};
+
+const dialogFormVisible = ref(false);
+const formLabelWidth = '140px';
+
 </script>
 
 <style scoped>

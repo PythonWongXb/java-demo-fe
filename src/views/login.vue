@@ -10,14 +10,26 @@
     <el-button @click="register">register</el-button>
     <el-button @click="forgetPassword">forget password</el-button>
     <el-dialog v-model="dialogFormVisible" title="Shipping address">
-        <el-form :model="formData">
-            <el-form-item label="名字" :label-width="formLabelWidth">
+        <el-form
+            ref="registerForm" :rules="rules"
+            :model="formData"
+        >
+            <el-form-item
+                label="名字" prop="username"
+                :label-width="formLabelWidth"
+            >
                 <el-input v-model="formData.username" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="手机" :label-width="formLabelWidth">
+            <el-form-item
+                label="手机" prop="mobile"
+                :label-width="formLabelWidth"
+            >
                 <el-input v-model="formData.mobile" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="密码" :label-width="formLabelWidth">
+            <el-form-item
+                prop="pwd" label="密码"
+                :label-width="formLabelWidth"
+            >
                 <el-input v-model="formData.pwd" autocomplete="off"/>
             </el-form-item>
         </el-form>
@@ -31,14 +43,26 @@
         </template>
     </el-dialog>
     <el-dialog v-model="dialogResetPassowrdFormVisible" title="forgetPassword">
-        <el-form :model="passwordFormData">
-            <el-form-item label="名字" :label-width="formLabelWidth">
+        <el-form
+            ref="passwordForm" :rules="rules"
+            :model="passwordFormData"
+        >
+            <el-form-item
+                label="名字" prop="username"
+                :label-width="formLabelWidth"
+            >
                 <el-input v-model="passwordFormData.username" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="手机" :label-width="formLabelWidth">
+            <el-form-item
+                label="手机" prop="mobile"
+                :label-width="formLabelWidth"
+            >
                 <el-input v-model="passwordFormData.mobile" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="密码" :label-width="formLabelWidth">
+            <el-form-item
+                label="密码" prop="pwd"
+                :label-width="formLabelWidth"
+            >
                 <el-input v-model="passwordFormData.pwd" autocomplete="off"/>
             </el-form-item>
         </el-form>
@@ -60,7 +84,7 @@ export default {
 };
 </script>
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus';
+import { ElMessage, FormInstance, FormRules } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { useUserStore } from 'stores/modules/user';
 
@@ -110,6 +134,18 @@ const passwordFormData = ref<Demo>({
     "username": ""
 });
 
+const rules = reactive<FormRules>({
+    mobile: [
+        { required: true, message: 'Please input Activity name', trigger: ['blur', 'change'] },
+    ],
+    pwd: [
+        { required: true, message: 'Please input Activity name', trigger: ['blur', 'change'] },
+    ],
+    username: [
+        { required: true, message: 'Please input Activity name', trigger: ['blur', 'change'] },
+    ],
+});
+
 const register = () => {
     dialogFormVisible.value = true;
 };
@@ -117,8 +153,14 @@ const register = () => {
 const forgetPassword = () => {
     dialogResetPassowrdFormVisible.value = true;
 };
+const passwordForm = ref<FormInstance>();
+const registerForm = ref<FormInstance>();
+const validateForm = async (form: FormInstance) => {
+    const res = await form.validate();
+};
 
 const comfirmResetPassword = async () => {
+    await validateForm(passwordForm.value as FormInstance);
     try {
         const res = await API.comfirmResetPassword(passwordFormData.value);
         ElMessage({
@@ -140,6 +182,7 @@ const comfirmResetPassword = async () => {
 };
 
 const comfirm = async () => {
+    await validateForm(registerForm.value as FormInstance);
     try {
         const res = await API.register(formData.value);
         ElMessage({

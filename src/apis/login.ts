@@ -22,3 +22,6 @@ export const register = (data: RequestData) => request<RequestData,
 
 export const validateUser = (data: RequestData) => request<RequestData,
     IQueryDetailInfoByIdRes>('/user/get', data);
+
+export const comfirmResetPassword = (data: RequestData) => request<RequestData,
+    IQueryDetailInfoByIdRes>('/user/reset', data);

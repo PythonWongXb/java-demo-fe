@@ -8,6 +8,7 @@
     </div>
     <el-button @click="login">login</el-button>
     <el-button @click="register">register</el-button>
+    <el-button @click="forgetPassword">forget password</el-button>
     <el-dialog v-model="dialogFormVisible" title="Shipping address">
         <el-form :model="formData">
             <el-form-item label="名字" :label-width="formLabelWidth">
@@ -25,6 +26,27 @@
                 <el-button @click="dialogFormVisible = false">Cancel</el-button>
                 <el-button type="primary" @click="comfirm">
                     Confirm
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
+    <el-dialog v-model="dialogResetPassowrdFormVisible" title="forgetPassword">
+        <el-form :model="passwordFormData">
+            <el-form-item label="名字" :label-width="formLabelWidth">
+                <el-input v-model="passwordFormData.username" autocomplete="off"/>
+            </el-form-item>
+            <el-form-item label="手机" :label-width="formLabelWidth">
+                <el-input v-model="passwordFormData.mobile" autocomplete="off"/>
+            </el-form-item>
+            <el-form-item label="密码" :label-width="formLabelWidth">
+                <el-input v-model="passwordFormData.pwd" autocomplete="off"/>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogResetPassowrdFormVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="comfirmResetPassword">
+                    comfirmResetPassword
                 </el-button>
             </span>
         </template>
@@ -82,8 +104,39 @@ const formData = ref<Demo>({
     "username": ""
 });
 
+const passwordFormData = ref<Demo>({
+    "mobile": '',
+    "pwd": "",
+    "username": ""
+});
+
 const register = () => {
     dialogFormVisible.value = true;
+};
+
+const forgetPassword = () => {
+    dialogResetPassowrdFormVisible.value = true;
+};
+
+const comfirmResetPassword = async () => {
+    try {
+        const res = await API.comfirmResetPassword(passwordFormData.value);
+        ElMessage({
+            type: 'success',
+            message: res.message
+        });
+        passwordFormData.value = {
+            "mobile": '',
+            "pwd": "",
+            "username": ""
+        };
+        dialogResetPassowrdFormVisible.value = false;
+    } catch (error) {
+        ElMessage({
+            type: 'error',
+            message: (error as { message: string }).message
+        });
+    }
 };
 
 const comfirm = async () => {
@@ -108,6 +161,7 @@ const comfirm = async () => {
 };
 
 const dialogFormVisible = ref(false);
+const dialogResetPassowrdFormVisible = ref(false);
 const formLabelWidth = '140px';
 
 </script>

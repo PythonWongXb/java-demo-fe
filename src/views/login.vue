@@ -134,7 +134,7 @@ const passwordFormData = ref<Demo>({
     "username": ""
 });
 
-const rules = reactive<FormRules>({
+const rules: FormRules = {
     mobile: [
         { required: true, message: 'Please input Activity name', trigger: ['blur', 'change'] },
     ],
@@ -144,7 +144,7 @@ const rules = reactive<FormRules>({
     username: [
         { required: true, message: 'Please input Activity name', trigger: ['blur', 'change'] },
     ],
-});
+};
 
 const register = () => {
     dialogFormVisible.value = true;

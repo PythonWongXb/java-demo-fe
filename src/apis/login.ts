@@ -5,17 +5,20 @@ interface RequestData {
 
 interface IQueryDetailInfoByIdRes extends GeneralResData {
     data: {
-        data: {
+        user: {
             username: string;
             avatarUrl: string;
         };
+        token: string;
     };
     result: boolean;
     message: string;
 };
-
-export const login = (data: RequestData) => request<RequestData,
-    IQueryDetailInfoByIdRes>('/user/login', data);
+interface TRequestOptions {
+    headers: Record<string, string>;
+}
+export const login = (data: RequestData, options: TRequestOptions) => request<RequestData,
+    IQueryDetailInfoByIdRes, TRequestOptions>('/user/login', data, options);
 
 export const register = (data: RequestData) => request<RequestData,
     IQueryDetailInfoByIdRes>('/user/register', data);

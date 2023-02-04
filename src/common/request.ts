@@ -1,10 +1,11 @@
 import router from '@/router';
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { ElMessage } from 'element-plus';
 export type TResData = GeneralResData | LoginResData;
 
 // T是请求参数data的类型, R是后端接口数据类型，U是自定义方法response函数的返回值
 interface TRequestOptions<T extends object, R extends TResData, U> extends AxiosRequestConfig<T> {
+    headers: AxiosRequestHeaders;
     noPrefix?: boolean;
     response?(
         res: AxiosResponse<R>,
@@ -30,12 +31,15 @@ const responseIsLogin = (res: TResData): res is LoginResData => {
 };
 
 // T是请求参数data的类型, R是返回值类型
-const request: Request = <T extends object = object, R extends TResData = TResData, U = unknown>
+const request: Request = async <T extends object = object, R extends TResData = TResData, U = unknown>
     (url: string | TRequestOptions<T, R, U>, data?: T, options?: TRequestOptions<T, R, U>): Promise<R> => {
 
+    const { useUserStore } = await import('@/stores/modules/user');
+
+    const store = useUserStore();
     const basePath = '/api';
     // 兼容配置对象的写法
-    let config: TRequestOptions<T, R, U> = {};
+    let config: TRequestOptions<T, R, U> = {headers: {}};
     if (typeof url === 'string') {
         url = options?.noPrefix ? url : `${basePath}${url}`;
         config = {
@@ -56,6 +60,9 @@ const request: Request = <T extends object = object, R extends TResData = TResDa
             // 做一个请求头的合并，这样没必要请求的时候把initHeaders返回的请求头都写一遍
             headers: options?.headers || {},
         };
+    }
+    if (store.token) {
+        config.headers.Authentication = store.token;
     }
     return new Promise<R>((resolve, reject) => {
         instance.request(config).then(async (res: AxiosResponse<R>) => {
@@ -79,11 +86,10 @@ const request: Request = <T extends object = object, R extends TResData = TResDa
                     });
                     // eslint-disable-next-line @typescript-eslint/no-floating-promises
                     router.push('/login');
-                    const { useUserStore } = await import('@/stores/modules/user');
-
-                    const store = useUserStore();
                     store.clearUserInfo();
-                    return reject(res.data);
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    return new Promise(resolve => {});
+                    // return reject(res.data);
                 }
                 if (+res.data.code === 0) {
                     resolve(res.data);

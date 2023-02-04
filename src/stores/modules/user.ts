@@ -2,6 +2,7 @@ interface PayLoad {
     isAuth: boolean;
     avatarUrl: string;
     username: string;
+    token: string;
 }
 
 export const useUserStore = defineStore('user', {
@@ -11,6 +12,7 @@ export const useUserStore = defineStore('user', {
         isNewUser: false, // 是否新创建的用户
         avatarUrl: '', // 用户头像地址
         nickName: '', // 用户昵称
+        token: '', // 用户token
     }),
     actions: {
         // 更新登录状态
@@ -22,6 +24,7 @@ export const useUserStore = defineStore('user', {
             this.isAuth = payLoad.isAuth;
             this.avatarUrl = payLoad.avatarUrl;
             this.nickName = payLoad.username;
+            this.token = payLoad.token;
         },
 
         clearUserInfo() {

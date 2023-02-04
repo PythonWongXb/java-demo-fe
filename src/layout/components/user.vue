@@ -26,9 +26,10 @@
 import router from '@/router';
 import { useUserStore } from 'stores/modules/user';
 const store = useUserStore();
-
+const toast = inject<Ttoast>('toast')!;
 const logout = async () => {
     await API.logout({});
+    toast.$message.success('退出成功！');
     router.push('/login');
     store.clearUserInfo();
 };

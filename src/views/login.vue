@@ -89,8 +89,8 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from 'stores/modules/user';
 
 const store = useUserStore();
-const phone = ref("15942043948");
-const pwd = ref("1234");
+const phone = ref("test");
+const pwd = ref("123");
 const router = useRouter();
 
 const login = async () => {
@@ -98,16 +98,24 @@ const login = async () => {
         "mobile": phone.value,
         "pwd": pwd.value
     };
+    const requestData = new FormData();
+    requestData.set("mobile", phone.value);
+    requestData.set("pwd", pwd.value);
     try {
-        const res = await API.login(params);
+        const res = await API.login(requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
         ElMessage({
             type: 'success',
             message: res.message
         });
         store.updateUserInfo({
-            username: res.data.data.username,
-            avatarUrl: res.data.data.avatarUrl,
+            username: res.data.user.username,
+            avatarUrl: res.data.user.avatarUrl,
             isAuth: true,
+            token: res.data.token
         });
         router.push('/list');
     } catch (error) {

@@ -30,6 +30,10 @@ const responseIsLogin = (res: TResData): res is LoginResData => {
     return typeof data.retcode === 'number';
 };
 
+interface Demo<R> extends AxiosResponse<R> {
+    data: { message: string } & AxiosResponse<R>['data'];
+};
+
 // T是请求参数data的类型, R是返回值类型
 const request: Request = async <T extends object = object, R extends TResData = TResData, U = unknown>
     (url: string | TRequestOptions<T, R, U>, data?: T, options?: TRequestOptions<T, R, U>): Promise<R> => {
@@ -65,7 +69,7 @@ const request: Request = async <T extends object = object, R extends TResData = 
         config.headers.Authentication = store.token;
     }
     return new Promise<R>((resolve, reject) => {
-        instance.request(config).then(async (res: AxiosResponse<R>) => {
+        instance.request(config).then(async (res: Demo<R>) => {
             if (typeof config.response === 'function') {
                 config.response(res, resolve, reject);
                 return;
@@ -74,9 +78,9 @@ const request: Request = async <T extends object = object, R extends TResData = 
                 return reject(res);
             }
             if (!responseIsLogin(res.data)) {
-                const { code } = res.data;
+                const { code, message } = res.data;
                 // const isAuth = wsCache.get('isAuth');
-                const whiteCodes = [401, 402];
+                const whiteCodes = [401];
                 // 如果是免鉴权，正常放行
                 if (whiteCodes.includes(+code)) {
                     ElMessage({
@@ -90,6 +94,13 @@ const request: Request = async <T extends object = object, R extends TResData = 
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     return new Promise(resolve => {});
                     // return reject(res.data);
+                }
+                if (+code === 402) {
+                    ElMessage({
+                        type: 'error',
+                        message,
+                        duration: 1000,
+                    });
                 }
                 if (+res.data.code === 0) {
                     resolve(res.data);

@@ -9,6 +9,8 @@
     <el-button @click="login">login</el-button>
     <el-button @click="register">register</el-button>
     <el-button @click="forgetPassword">forget password</el-button>
+
+    <el-button @click="jumpToIntroduce">introduce(免鉴权页面)</el-button>
     <el-dialog v-model="dialogFormVisible" title="Shipping address">
         <el-form
             ref="registerForm" :rules="rules"
@@ -89,7 +91,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from 'stores/modules/user';
 
 const store = useUserStore();
-const phone = ref("test");
+const phone = ref("test-admin");
 const pwd = ref("123");
 const router = useRouter();
 
@@ -214,6 +216,10 @@ const comfirm = async () => {
 const dialogFormVisible = ref(false);
 const dialogResetPassowrdFormVisible = ref(false);
 const formLabelWidth = '140px';
+
+const jumpToIntroduce = () => {
+    router.push('/introduce');
+};
 
 </script>
 

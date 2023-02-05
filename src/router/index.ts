@@ -29,6 +29,15 @@ export const routeMap: RouteRecordRaw[] = [
             enName: 'advancedSearch:detail'
         },
     },
+    {
+        path: '/introduce',
+        component: () => import('views/introduce.vue'),
+        meta: {
+            owner: 'qiankeSearch',
+            title: 'introduce',
+            enName: 'advancedSearch'
+        },
+    },
     /* plop route insert here */
 ];
 

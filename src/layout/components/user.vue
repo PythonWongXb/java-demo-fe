@@ -17,7 +17,7 @@
         v-else
         class="login-btn"
         text
-        @click="() => {}"
+        @click="userLogin"
     >
         登录/注册
     </el-button>
@@ -36,6 +36,10 @@ const logout = async () => {
 
 const handlerCommand = (directive: string) => {
     logout();
+};
+
+const userLogin = () => {
+    router.push('/login');
 };
 </script>
 <style lang="less" scoped></style>

@@ -12,6 +12,15 @@ export const staticRouteMap: RouteRecordRaw[] = [
         },
     },
     {
+        path: '/home',
+        component: () => import('views/home.vue'),
+        meta: {
+            owner: 'home',
+            title: 'home',
+            enName: 'home'
+        },
+    },
+    {
         path: '/list',
         component: () => import('views/list.vue'),
         meta: {
@@ -44,7 +53,7 @@ export const staticRouteMap: RouteRecordRaw[] = [
         meta: {
             owner: 'qiankeSearch',
             title: '402',
-            enName: 'introduce:detail'
+            enName: 'home:detail'
         },
     },
     /* plop route insert here */
@@ -56,7 +65,15 @@ const getViews = (path: string) => {
     return modules['../views/auth' + path + '.vue'];
 };
 
-const RDResult = [
+export interface AuthItemType {
+    path: string;
+    menuPath: string;
+    allowRole: string[];
+    owner: string;
+    title: string;
+}
+
+export const rDResultAll = [
     {
         path: '/user',
         menuPath: 'title',
@@ -80,7 +97,7 @@ const RDResult = [
     },
 ];
 
-export const authRouteMapList = RDResult.map(item => ({
+export const authRouteMapList = rDResultAll.map(item => ({
         path: item.path,
         component: () => getViews(item.path)(),
         meta: {
@@ -91,6 +108,18 @@ export const authRouteMapList = RDResult.map(item => ({
     }) as RouteRecordRaw
 );
 
+export const getAuthRouteMapList = (authList: AuthItemType[]) => {
+    return authList.map(item => ({
+        path: item.path,
+        component: () => getViews(item.path)(),
+        meta: {
+            owner: item.owner,
+            title: item.title,
+            enName: item.menuPath
+        }
+    }) as RouteRecordRaw
+    );
+};
 
 export const routeMap = [...staticRouteMap, ...authRouteMapList];
 
@@ -99,7 +128,7 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            redirect: '/login'
+            redirect: '/home'
         },
         ...routeMap,
         {

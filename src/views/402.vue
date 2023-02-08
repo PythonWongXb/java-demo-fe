@@ -22,7 +22,9 @@ const jumpToList = () => {
     router.push('/list');
 };
 
-
+watch(() => route.path, (oldRouter, currentRouter) => {
+    console.log(oldRouter, currentRouter);
+}, { immediate: true });
 </script>
 
 <style lang="less" scoped>

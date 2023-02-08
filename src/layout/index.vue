@@ -61,7 +61,7 @@
 <script lang="ts" setup>
 import type {RouteMeta, RouteRecordRaw} from 'vue-router';
 import { useProviderToast, locale } from '@/plugins/elementPlus';
-import { authRouteMapList, staticRouteMap } from '@/router';
+import { getAuthRouteMapList, rDResultAll, staticRouteMap } from '@/router';
 import { menuConfig } from './constant';
 import { hasProperty } from 'common/utils/is';
 import Icon from 'components/Icon.vue';
@@ -163,9 +163,12 @@ const menuClick = (item: TRouteDictChild) => {
     router.push(item.path);
 };
 
+// 接口获取
 setTimeout(() => {
-    initMenu(authRouteMapList);
+    const menu = getAuthRouteMapList(rDResultAll.filter(item => item.path !== '/user'));
+    initMenu(menu);
 }, 2000);
+
 </script>
 <style lang="less" scoped>
 .el-menu-vertical-demo {

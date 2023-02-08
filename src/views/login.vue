@@ -96,10 +96,6 @@ const pwd = ref("123");
 const router = useRouter();
 
 const login = async () => {
-    const params = {
-        "mobile": phone.value,
-        "pwd": pwd.value
-    };
     const requestData = new FormData();
     requestData.set("mobile", phone.value);
     requestData.set("pwd", pwd.value);
@@ -119,7 +115,6 @@ const login = async () => {
             avatarUrl: res.data.user.avatarUrl,
             isAuth: true,
             token: res.data.token,
-            menuList: res.data.menuList
         });
         router.push('/list');
     } catch (error) {

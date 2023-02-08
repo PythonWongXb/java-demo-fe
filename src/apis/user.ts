@@ -23,4 +23,4 @@ export const getUserList = (data: RequestData = {}) => request<RequestData,
     IQueryDetailInfoByIdRes>('/user/list', data);
 
 export const getAuthMenuList = () => request<
-    ImenuList>('/user/list');
+    ImenuList>('/user/getMenuList');

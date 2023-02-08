@@ -66,7 +66,6 @@ import { menuConfig } from './constant';
 import { hasProperty } from 'common/utils/is';
 import Icon from 'components/Icon.vue';
 import user from './components/user.vue';
-import { useUserStore } from '@/stores/modules/user';
 
 type TMenuConfigKeys = keyof typeof menuConfig;
 type TRouteDictChild = {
@@ -147,7 +146,8 @@ const useMenuList = () => {
         initMenu,
         defaultActiveMenuIndex,
         handlerCollapse,
-        menuCollapseState
+        menuCollapseState,
+        initActiveMenuIndex,
     };
 };
 
@@ -157,20 +157,19 @@ const {
     defaultActiveMenuIndex,
     handlerCollapse,
     initMenu,
-    menuCollapseState
+    menuCollapseState,
+    initActiveMenuIndex,
 } = useMenuList();
 
 const menuClick = (item: TRouteDictChild) => {
     router.push(item.path);
 };
 
-const store = useUserStore();
-
-
 const getAuthMenuList = async () => {
-    console.log(store.menuList);
-    const menu = getAuthRouteMapList(store.menuList);
+    const res = await API.getAuthMenuList();
+    const menu = getAuthRouteMapList(res.data);
     initMenu(menu);
+    initActiveMenuIndex(route.path);
 };
 
 getAuthMenuList();

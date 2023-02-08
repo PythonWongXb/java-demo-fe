@@ -101,6 +101,15 @@ const request: Request = async <T extends object = object, R extends TResData = 
                         message,
                         duration: 1000,
                     });
+                    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                    // console.log(router);
+                    await router.push({
+                        path: '/402',
+                        query: {
+                            noAuth: 1,
+                            path: router.currentRoute.value.path
+                        }
+                    });
                 }
                 if (+res.data.code === 0) {
                     resolve(res.data);

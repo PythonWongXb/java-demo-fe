@@ -23,7 +23,7 @@
                     >
                 </header>
                 <el-sub-menu
-                    v-for="(menu, menuIndex) of routeDict" :key="menu.id"
+                    v-for="(menu, menuIndex) of Object.values(listItem)" :key="menu.id"
                     :expand-close-icon="MenuIconBottom"
                     :expand-open-icon="MenuIconTop"
                     :index="(menuIndex + 1).toString()"
@@ -59,9 +59,9 @@
     </el-container>
 </template>
 <script lang="ts" setup>
-import type {RouteMeta} from 'vue-router';
+import type {RouteMeta, RouteRecordRaw} from 'vue-router';
 import { useProviderToast, locale } from '@/plugins/elementPlus';
-import { routeMap } from '@/router';
+import { authRouteMapList, staticRouteMap } from '@/router';
 import { menuConfig } from './constant';
 import { hasProperty } from 'common/utils/is';
 import Icon from 'components/Icon.vue';
@@ -88,30 +88,32 @@ const MenuIconBottom = defineComponent(() => () => h(Icon, { icon: 'i-ep-caret-b
 const MenuIconTop = defineComponent(() => () => h(Icon, { icon: 'i-ep-caret-top' }));
 const loginIsComplete = ref(true);
 // 初始化用户是否登录
-
 const useMenuList = () => {
     const menuCollapseState = ref(false);
     const handlerCollapse = () => menuCollapseState.value = !unref(menuCollapseState);
-    let listItem = {} as Record<TMenuConfigKeys, IRouteDict>;
+    let listItem = reactive({}) as Record<TMenuConfigKeys, IRouteDict>;
     const defaultActiveMenuIndex = ref<string>('');
-    for (const item of routeMap) {
-        const { title, owner, enName } = item.meta ?? {} as RouteMeta;
-        if (!hasProperty(owner, menuConfig) || !title) {
-            continue;
+    const initMenu = (mapList: RouteRecordRaw[]) => {
+        for (const item of mapList) {
+            const { title, owner, enName } = item.meta ?? {} as RouteMeta;
+            if (!hasProperty(owner, menuConfig) || !title) {
+                continue;
+            }
+            const obj = listItem[owner] || {
+                id: owner,
+                ...menuConfig[owner],
+                children: []
+            };
+            const arr = enName.split(':');
+            arr.length === 1 && obj.children.push({
+                title,
+                path: item.path,
+                enName: item.meta?.enName || ''
+            });
+            listItem[owner] = obj;
         }
-        const obj = listItem[owner] || {
-            id: owner,
-            ...menuConfig[owner],
-            children: []
-        };
-        const arr = enName.split(':');
-        arr.length === 1 && obj.children.push({
-            title,
-            path: item.path,
-            enName: item.meta?.enName || ''
-        });
-        listItem[owner] = obj;
-    }
+    };
+    initMenu(staticRouteMap);
     const initActiveMenuIndex = (newPath: string) => {
         const routeDict = Object.values(listItem);
         let activeIndexs:number[] = [];
@@ -137,25 +139,33 @@ const useMenuList = () => {
             }
         }
     };
-    const menuClick = (item: TRouteDictChild) => {
-        router.push(item.path);
-    };
     watch(() => route.path, initActiveMenuIndex, { immediate: true });
     return {
-        routeDict: Object.values(listItem),
-        menuClick,
+        // routeDict: Object.values(listItem),
+        listItem,
+        initMenu,
         defaultActiveMenuIndex,
         handlerCollapse,
         menuCollapseState
     };
 };
-const { routeDict,
-        menuClick,
-        defaultActiveMenuIndex,
-        handlerCollapse,
-        menuCollapseState
+
+
+const {
+    listItem,
+    defaultActiveMenuIndex,
+    handlerCollapse,
+    initMenu,
+    menuCollapseState
 } = useMenuList();
 
+const menuClick = (item: TRouteDictChild) => {
+    router.push(item.path);
+};
+
+setTimeout(() => {
+    initMenu(authRouteMapList);
+}, 2000);
 </script>
 <style lang="less" scoped>
 .el-menu-vertical-demo {

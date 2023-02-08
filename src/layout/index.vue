@@ -93,15 +93,15 @@ const useMenuList = () => {
     const handlerCollapse = () => menuCollapseState.value = !unref(menuCollapseState);
     let listItem = reactive({}) as Record<TMenuConfigKeys, IRouteDict>;
     const defaultActiveMenuIndex = ref<string>('');
-    const initMenu = (mapList: RouteRecordRaw[]) => {
+    const initMenu = (mapList: RouteRecordRaw[], menuConfigs: typeof menuConfig) => {
         for (const item of mapList) {
             const { title, owner, enName } = item.meta ?? {} as RouteMeta;
-            if (!hasProperty(owner, menuConfig) || !title) {
+            if (!hasProperty(owner, menuConfigs) || !title) {
                 continue;
             }
             const obj = listItem[owner] || {
                 id: owner,
-                ...menuConfig[owner],
+                ...menuConfigs[owner],
                 children: []
             };
             const arr = enName.split(':');
@@ -113,7 +113,6 @@ const useMenuList = () => {
             listItem[owner] = obj;
         }
     };
-    initMenu(staticRouteMap);
     const initActiveMenuIndex = (newPath: string) => {
         const routeDict = Object.values(listItem);
         let activeIndexs:number[] = [];
@@ -168,7 +167,8 @@ const menuClick = (item: TRouteDictChild) => {
 const getAuthMenuList = async () => {
     const res = await API.getAuthMenuList();
     const menu = getAuthRouteMapList(res.data);
-    initMenu(menu);
+    // @xiangbo todo menuConfig也从接口获取
+    initMenu([...staticRouteMap, ...menu], menuConfig);
     initActiveMenuIndex(route.path);
 };
 

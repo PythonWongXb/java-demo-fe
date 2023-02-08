@@ -1,9 +1,14 @@
+import { IMenuItemType } from '@/apis/type';
+
 interface PayLoad {
     isAuth: boolean;
     avatarUrl: string;
     username: string;
     token: string;
+    menuList: IMenuItemType[];
 }
+
+const defaultMenuList: IMenuItemType[] = [];
 
 export const useUserStore = defineStore('user', {
     persist: true,
@@ -13,6 +18,7 @@ export const useUserStore = defineStore('user', {
         avatarUrl: '', // 用户头像地址
         nickName: '', // 用户昵称
         token: '', // 用户token
+        menuList: defaultMenuList, // 用户token
     }),
     actions: {
         // 更新登录状态
@@ -25,6 +31,7 @@ export const useUserStore = defineStore('user', {
             this.avatarUrl = payLoad.avatarUrl;
             this.nickName = payLoad.username;
             this.token = payLoad.token;
+            this.menuList = payLoad.menuList;
         },
 
         clearUserInfo() {

@@ -66,6 +66,7 @@ import { menuConfig } from './constant';
 import { hasProperty } from 'common/utils/is';
 import Icon from 'components/Icon.vue';
 import user from './components/user.vue';
+import { useUserStore } from '@/stores/modules/user';
 
 type TMenuConfigKeys = keyof typeof menuConfig;
 type TRouteDictChild = {
@@ -163,12 +164,16 @@ const menuClick = (item: TRouteDictChild) => {
     router.push(item.path);
 };
 
-// 接口获取
-setTimeout(() => {
-    const menu = getAuthRouteMapList(rDResultAll.filter(item => item.path !== '/user'));
-    initMenu(menu);
-}, 2000);
+const store = useUserStore();
 
+
+const getAuthMenuList = async () => {
+    console.log(store.menuList);
+    const menu = getAuthRouteMapList(store.menuList);
+    initMenu(menu);
+};
+
+getAuthMenuList();
 </script>
 <style lang="less" scoped>
 .el-menu-vertical-demo {

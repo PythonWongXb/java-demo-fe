@@ -1,7 +1,7 @@
 import { request } from 'common/request';
+import { IMenuItemType } from './type';
 interface RequestData {
-    pageSize: number;
-    current: number;
+
 };
 
 export interface IUserTable {
@@ -15,6 +15,12 @@ interface IQueryDetailInfoByIdRes extends GeneralResData {
         data: IUserTable[];
     };
 };
+export interface ImenuList extends GeneralResData {
+    data: IMenuItemType[];
+};
 
-export const getUserList = (data: RequestData) => request<RequestData,
+export const getUserList = (data: RequestData = {}) => request<RequestData,
     IQueryDetailInfoByIdRes>('/user/list', data);
+
+export const getAuthMenuList = () => request<
+    ImenuList>('/user/list');

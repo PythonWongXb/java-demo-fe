@@ -2,12 +2,12 @@
     <div>
         <div>（白首计划）莫等闲，白了少年头，空悲切！</div>
         <div>introduce</div>
-        <H1>FE:</H1>
+        <h1>FE:</h1>
         <div>Vue3 + TS + Vite + unocss +Husky</div>
-        <H1>RD</H1>
+        <h1>RD</h1>
         <div>Java + Spring-Boot Mybatis-plus Mysql Redis Docker + Spring-Security(jwt)
             RBAC0 (Resource or Role) Base Access Control</div>
-        <H1>部署、运维、监控</H1>
+        <h1>部署、运维、监控</h1>
         <div>后续</div>
         <div>微信: 15942043949</div>
         <a href="https://www.bilibili.com/video/BV1oA411X7Sy?p=22&vd_source=a225b72a149caac3dbb2f98b309cd83f">base1</a>

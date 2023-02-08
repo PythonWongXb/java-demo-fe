@@ -1,3 +1,4 @@
+import { IMenuItemType } from '@/apis/type';
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 export const staticRouteMap: RouteRecordRaw[] = [
@@ -65,14 +66,6 @@ const getViews = (path: string) => {
     return modules['../views/auth' + path + '.vue'];
 };
 
-export interface AuthItemType {
-    path: string;
-    menuPath: string;
-    allowRole: string[];
-    owner: string;
-    title: string;
-}
-
 export const rDResultAll = [
     {
         path: '/user',
@@ -108,7 +101,7 @@ export const authRouteMapList = rDResultAll.map(item => ({
     }) as RouteRecordRaw
 );
 
-export const getAuthRouteMapList = (authList: AuthItemType[]) => {
+export const getAuthRouteMapList = (authList: IMenuItemType[]) => {
     return authList.map(item => ({
         path: item.path,
         component: () => getViews(item.path)(),

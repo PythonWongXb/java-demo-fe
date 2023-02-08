@@ -1,4 +1,5 @@
 import { request } from 'common/request';
+import { IMenuItemType } from './type';
 interface RequestData {
 
 };
@@ -10,6 +11,7 @@ interface IQueryDetailInfoByIdRes extends GeneralResData {
             avatarUrl: string;
         };
         token: string;
+        menuList: IMenuItemType[];
     };
     result: boolean;
     message: string;

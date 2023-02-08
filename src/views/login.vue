@@ -109,6 +109,7 @@ const login = async () => {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         });
+        console.log({res});
         ElMessage({
             type: 'success',
             message: res.message
@@ -117,7 +118,8 @@ const login = async () => {
             username: res.data.user.username,
             avatarUrl: res.data.user.avatarUrl,
             isAuth: true,
-            token: res.data.token
+            token: res.data.token,
+            menuList: res.data.menuList
         });
         router.push('/list');
     } catch (error) {

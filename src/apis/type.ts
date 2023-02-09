@@ -1,8 +1,10 @@
-
 export interface IMenuItemType {
+    order: number;
+    deleted: boolean;
+    id: number;
+    parentId: number;
+    parentName: string;
     path: string;
-    menuPath: string;
-    allowRole: string[];
-    owner: string;
     title: string;
+    children?: IMenuItemType[];
 }

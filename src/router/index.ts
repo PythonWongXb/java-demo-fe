@@ -106,9 +106,6 @@ export const getAuthRouteMapList = (authList: IMenuItemType[]) => {
         path: item.path,
         component: () => getViews(item.path)(),
         meta: {
-            owner: item.owner,
-            title: item.title,
-            enName: item.menuPath
         }
     }) as RouteRecordRaw
     );

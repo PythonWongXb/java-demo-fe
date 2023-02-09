@@ -23,19 +23,19 @@
                     >
                 </header>
                 <el-sub-menu
-                    v-for="(menu, menuIndex) of Object.values(listItem)" :key="menu.id"
+                    v-for="(menu, menuIndex) in menuList" :key="menu.id"
                     :expand-close-icon="MenuIconBottom"
                     :expand-open-icon="MenuIconTop"
                     :index="(menuIndex + 1).toString()"
                 >
                     <template #title>
-                        <Icon :icon="menu.icon" class-name="wihe-14px mr-8px"/>
-                        <span class="h-36px leading-36px c-aBlackText">{{ menu.menuTitle }}</span>
+                        <Icon icon="svg-vue" class-name="wihe-14px mr-8px"/>
+                        <span class="h-36px leading-36px c-aBlackText">{{ menu.title }}</span>
                     </template>
                     <el-menu-item-group>
                         <el-menu-item
-                            v-for="(item, index) of menu.children" :key="index"
-                            :index="`${menuIndex + 1}-${index + 1}`"
+                            v-for="(item, index) in menu.children" :key="index"
+                            :index="`${item.parentId}-${item.id}`"
                             @click="instance => menuClick(item)"
                         >{{ item.title }}</el-menu-item>
                     </el-menu-item-group>
@@ -66,6 +66,9 @@ import { menuConfig } from './constant';
 import { hasProperty } from 'common/utils/is';
 import Icon from 'components/Icon.vue';
 import user from './components/user.vue';
+import { ImenuList } from '@/apis/user';
+import { IMenuItemType } from '@/apis/type';
+import { getJsonTree } from '@/apis/utils';
 
 type TMenuConfigKeys = keyof typeof menuConfig;
 type TRouteDictChild = {
@@ -91,85 +94,47 @@ const loginIsComplete = ref(true);
 const useMenuList = () => {
     const menuCollapseState = ref(false);
     const handlerCollapse = () => menuCollapseState.value = !unref(menuCollapseState);
-    let listItem = reactive({}) as Record<TMenuConfigKeys, IRouteDict>;
     const defaultActiveMenuIndex = ref<string>('');
-    const initMenu = (mapList: RouteRecordRaw[], menuConfigs: typeof menuConfig) => {
-        for (const item of mapList) {
-            const { title, owner, enName } = item.meta ?? {} as RouteMeta;
-            if (!hasProperty(owner, menuConfigs) || !title) {
-                continue;
-            }
-            const obj = listItem[owner] || {
-                id: owner,
-                ...menuConfigs[owner],
-                children: []
-            };
-            const arr = enName.split(':');
-            arr.length === 1 && obj.children.push({
-                title,
-                path: item.path,
-                enName: item.meta?.enName || ''
-            });
-            listItem[owner] = obj;
-        }
-    };
-    const initActiveMenuIndex = (newPath: string) => {
-        const routeDict = Object.values(listItem);
-        let activeIndexs:number[] = [];
-        for (let i = 0; i < routeDict.length; i++) {
-            const chidIndex = routeDict[i].children.findIndex(child => child.path === newPath);
-            if (chidIndex > -1) {
-                activeIndexs = [i + 1, chidIndex + 1];
-                defaultActiveMenuIndex.value = activeIndexs.join('-');
-            }
-            else {
-                const { enName = '' } = route.meta;
-                if (!enName) {
-                    return;
-                }
-                routeDict.forEach((item, routeIndex) => {
-                    const chidIndex = item.children.findIndex(child => enName.startsWith(child.enName));
-                    if (chidIndex > -1) {
-                        activeIndexs = [routeIndex + 1, chidIndex + 1];
-                        defaultActiveMenuIndex.value = activeIndexs.join('-');
-                        return;
-                    }
-                });
-            }
-        }
-    };
-    watch(() => route.path, initActiveMenuIndex, { immediate: true });
     return {
-        // routeDict: Object.values(listItem),
-        listItem,
-        initMenu,
         defaultActiveMenuIndex,
         handlerCollapse,
         menuCollapseState,
-        initActiveMenuIndex,
     };
 };
 
 
 const {
-    listItem,
     defaultActiveMenuIndex,
     handlerCollapse,
-    initMenu,
     menuCollapseState,
-    initActiveMenuIndex,
 } = useMenuList();
 
-const menuClick = (item: TRouteDictChild) => {
+const menuClick = (item: IMenuItemType) => {
     router.push(item.path);
 };
 
+const menuList = ref<IMenuItemType[]>([]);
+const menuOriginList = ref<IMenuItemType[]>([]);
+
+const initActiveMenuIndex = () => {
+    const r = route.path;
+    const res = menuOriginList.value.find(item => item.path === r);
+    if (res) {
+        console.log({res});
+        defaultActiveMenuIndex.value = `${res.parentId}-${res.id}`;
+    } else {
+        defaultActiveMenuIndex.value = '';
+    }
+};
+
+watch(() => route.path, initActiveMenuIndex, { immediate: true });
+
 const getAuthMenuList = async () => {
-    const res = await API.getAuthMenuList();
-    const menu = getAuthRouteMapList(res.data);
-    // @xiangbo todo menuConfig也从接口获取
-    initMenu([...staticRouteMap, ...menu], menuConfig);
-    initActiveMenuIndex(route.path);
+    const tempRes = await API.getAuthMenuList();
+    const res = tempRes.data.sort((a, b) => a.order > b.order ? 1 : -1);
+    menuOriginList.value = res;
+    menuList.value = getJsonTree(res, null);
+    initActiveMenuIndex();
 };
 
 getAuthMenuList();

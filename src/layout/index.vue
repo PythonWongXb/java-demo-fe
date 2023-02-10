@@ -121,7 +121,7 @@ const initActiveMenuIndex = () => {
     const res = menuOriginList.value.find(item => item.path === r);
     if (res) {
         console.log({res});
-        defaultActiveMenuIndex.value = `${res.parentId}-${res.id}`;
+        defaultActiveMenuIndex.value = `${res.parentId}-${res.subHideMenuId || res.id}`;
     } else {
         defaultActiveMenuIndex.value = '';
     }
@@ -133,7 +133,7 @@ const getAuthMenuList = async () => {
     const tempRes = await API.getAuthMenuList();
     const res = tempRes.data.sort((a, b) => a.order > b.order ? 1 : -1);
     menuOriginList.value = res;
-    menuList.value = getJsonTree(res, null);
+    menuList.value = getJsonTree(res.filter(item => !item.subHideMenuId), null);
     initActiveMenuIndex();
 };
 

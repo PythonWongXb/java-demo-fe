@@ -6,7 +6,9 @@
     <div>
         pwd: <el-input v-model="pwd"/>
     </div>
-    <el-button @click="login">login</el-button>
+    <el-button @click="login({})">login</el-button>
+    <el-button @click="loginAdmin">login-admin</el-button>
+    <el-button @click="loginNoraml">login-noraml</el-button>
     <el-button @click="register">register</el-button>
     <el-button @click="forgetPassword">forget password</el-button>
 
@@ -95,10 +97,24 @@ const phone = ref("test-admin");
 const pwd = ref("123");
 const router = useRouter();
 
-const login = async () => {
+const loginAdmin = () => {
+    login({
+        mobile: 'test-admin',
+        pwd: '123',
+    });
+};
+
+const loginNoraml = () => {
+    login({
+        mobile: 'test',
+        pwd: '123',
+    });
+};
+
+const login = async (obj: {mobile?: string, pwd?: string}) => {
     const requestData = new FormData();
-    requestData.set("mobile", phone.value);
-    requestData.set("pwd", pwd.value);
+    requestData.set("mobile", obj.mobile || phone.value);
+    requestData.set("pwd", obj.pwd || pwd.value);
     try {
         const res = await API.login(requestData, {
             headers: {

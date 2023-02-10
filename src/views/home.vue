@@ -1,6 +1,7 @@
 <template>
     <div>
         <div>home</div>
+        <tree/>
     </div>
 </template>
 <script lang="ts">

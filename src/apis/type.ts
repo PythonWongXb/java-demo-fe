@@ -6,5 +6,6 @@ export interface IMenuItemType {
     parentName: string;
     path: string;
     title: string;
+    subHideMenuId: number | null;
     children?: IMenuItemType[];
 }

@@ -88,6 +88,13 @@ export const rDResultAll = [
         owner: 'title',
         title: 'auth control',
     },
+    {
+        path: '/menu',
+        menuPath: 'menu',
+        allowRole: ['admin'],
+        owner: 'menu',
+        title: 'menu control',
+    },
 ];
 
 export const authRouteMapList = rDResultAll.map(item => ({

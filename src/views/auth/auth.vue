@@ -1,6 +1,7 @@
 <template>
     <div>
         <div>auth</div>
+
         <el-button @click="jumpToList">到列表页面</el-button>
     </div>
 </template>

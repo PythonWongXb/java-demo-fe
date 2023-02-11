@@ -2,7 +2,10 @@
     <el-tree
         :allow-drop="allowDrop"
         :allow-drag="allowDrag"
-        :data="data"
+        :data="props.fromData"
+        :props="{
+            label: 'label',
+        }"
         show-checkbox
         draggable
         default-expand-all
@@ -17,6 +20,7 @@
 </template>
 
 <script lang="ts" setup>
+import { IMenuItemType } from '@/apis/type';
 import type Node from 'element-plus/es/components/tree/src/model/node';
 import type { DragEvents } from 'element-plus/es/components/tree/src/model/useDragNode';
 import type {
@@ -24,6 +28,9 @@ import type {
     NodeDropType,
     } from 'element-plus/es/components/tree/src/tree.type';
 
+const props = defineProps<{
+    fromData: IMenuItemType[]
+}>();
 const handleDragStart = (node: Node, ev: DragEvents) => {
     console.log('drag start', node);
 };
@@ -74,14 +81,11 @@ const allowDrag = (draggingNode: Node) => {
 const data = [
     {
         label: 'Level one 1',
-        id: 1,
         children: [
             {
                 label: 'Level two 1-1',
-                id: 1,
                 children: [
                     {
-                        id: 1,
                         label: 'Level three 1-1-1',
                     },
                 ],
@@ -90,15 +94,12 @@ const data = [
     },
     {
         label: 'Level one 2',
-        id: 1,
         children: [
             {
                 label: 'Level two 2-1',
-                id: 1,
                 children: [
                     {
                         label: 'Level three 2-1-1',
-                        id: 1,
                     },
                 ],
             },

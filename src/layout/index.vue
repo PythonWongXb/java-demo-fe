@@ -59,14 +59,10 @@
     </el-container>
 </template>
 <script lang="ts" setup>
-import type {RouteMeta, RouteRecordRaw} from 'vue-router';
 import { useProviderToast, locale } from '@/plugins/elementPlus';
-import { getAuthRouteMapList, rDResultAll, staticRouteMap } from '@/router';
 import { menuConfig } from './constant';
-import { hasProperty } from 'common/utils/is';
 import Icon from 'components/Icon.vue';
 import user from './components/user.vue';
-import { ImenuList } from '@/apis/user';
 import { IMenuItemType } from '@/apis/type';
 import { getJsonTree } from '@/apis/utils';
 
@@ -120,9 +116,9 @@ const initActiveMenuIndex = () => {
     const r = route.path;
     const res = menuOriginList.value.find(item => item.path === r);
     if (res) {
-        console.log({res});
         defaultActiveMenuIndex.value = `${res.parentId}-${res.subHideMenuId || res.id}`;
     } else {
+        // 默认为首页 后端控制
         defaultActiveMenuIndex.value = '';
     }
 };
@@ -131,7 +127,7 @@ watch(() => route.path, initActiveMenuIndex, { immediate: true });
 
 const getAuthMenuList = async () => {
     const tempRes = await API.getAuthMenuList();
-    const res = tempRes.data.sort((a, b) => a.order > b.order ? 1 : -1);
+    const res = tempRes.data;
     menuOriginList.value = res;
     menuList.value = getJsonTree(res.filter(item => !item.subHideMenuId), null);
     initActiveMenuIndex();

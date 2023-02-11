@@ -1,4 +1,5 @@
 export interface IMenuItemType {
+    level: number;
     order: number;
     deleted: boolean;
     id: number;
